@@ -1,1 +1,50 @@
 
+import java.sql.*;
+import java.lang.*;
+import java.util.*;
+class JDBCExample
+{
+	public static void main(String args[])
+	{
+		try{
+			//load driver
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			
+			//connection
+			Connection con=DriverManager.getConnection(
+			        "jdbc:mysql://localhost:3306/testdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC",
+					"root",
+					"Siddhant@1811"
+					);
+			
+			//statement
+			Statement stmt=con.createStatement();
+			
+			//Insert data
+			//String sql="Insert into data1 values (4,'Aman',21)";
+			//stmt.executeUpdate(sql);
+			
+			String sql="Insert into data1(id,name,age) values(?,?,?)";
+			PreparedStatement ps=con.prepareStatement(sql);
+			ps.setInt(1,5);
+			ps.setString(2,"Amit");
+			ps.setInt(3,24);
+			ps.executeUpdate();
+			System.out.println("Data Inserted!");
+			
+			//execute query
+			ResultSet rs=stmt.executeQuery("Select * from data1");
+			
+			//Process Result
+			while(rs.next()){
+				System.out.println(rs.getInt("id") + " " + rs.getString("name") + " "+ rs.getInt("age"));
+			}
+			
+			//close
+			con.close();
+		}
+		catch(Exception e){
+			System.out.println(e);  
+		}
+	}
+}
